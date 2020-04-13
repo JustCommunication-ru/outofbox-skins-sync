@@ -1,29 +1,26 @@
-# README #
+# Outofbox Skin Sync #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Node.js приложение для синхронизации локального каталога и каталога на сайте под управлением outofbox.ru
 
-### What is this repository for? ###
+## Запуск ##
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+```
+node index.js path/to/config.yml
+```
 
-### How do I get set up? ###
+## Конфигурация ##
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+Пример конфига есть в `config.yml.dist`:
 
-### Contribution guidelines ###
+```
+watch:
+    path: 'path/to/templates/files/'
 
-* Writing tests
-* Code review
-* Other guidelines
+sync:
+    base_uri: 'http://outofbox-domain.tld/_api/skins/skin-name/files/'
+    token: ~
+```
 
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+`watch.path` – путь до каталога, в котором надо отслеживать изменения
+`sync.base_uri` – путь до API шаблона
+`sync.token` – секретный токен

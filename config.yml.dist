@@ -1,0 +1,6 @@
+watch:
+    path: 'path/to/templates/files/'
+
+sync:
+    base_uri: 'http://outofbox-domain.tld/_api/skins/skin-name/files/'
+    token: ~
