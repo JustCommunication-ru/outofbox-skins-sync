@@ -11,13 +11,27 @@ if (process.argv.length < 3) {
     return;
 }
 
-const config_in_file = YAML.parse(fs.readFileSync(process.argv[2], 'utf8'));
-const defaults = {
-};
+const config_file_path = path.resolve(process.argv[2])
+
+if (!fs.existsSync(config_file_path)) {
+	console.error('Config file not found at path', chalk.cyan("'" + config_file_path + "'"));
+	return;
+}
+
+const config_file_dir = path.dirname(config_file_path)
+
+const config_in_file = YAML.parse(fs.readFileSync(config_file_path, 'utf8'));
+const defaults = {};
 
 const config = Object.assign(defaults, config_in_file);
 
-const watch_path = path.resolve(config.watch.path);
+let watch_path;
+if (path.isAbsolute(config.watch.path)) {
+	watch_path = config.watch.path;
+} else {
+	console.log(config.watch.path, config_file_dir);
+	watch_path = path.resolve(config_file_dir + path.sep + config.watch.path);
+}
 
 const watcher = chokidar.watch(watch_path, {
     ignored: /(^|[\/\\])\../, // ignore dotfiles
@@ -25,7 +39,7 @@ const watcher = chokidar.watch(watch_path, {
     ignoreInitial: true
 });
 
-log('Start watch', chalk.magenta("'" + watch_path + "'"), 'and sync with', chalk.cyan("'" + config.sync.base_uri + "'"));
+log('Start watch', chalk.cyan("'" + watch_path + "'"), 'and sync with', chalk.cyan("'" + config.sync.base_uri + "'"));
 
 var queue = [], current_task = null;
 
