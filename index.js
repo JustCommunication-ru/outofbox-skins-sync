@@ -276,7 +276,6 @@ if (config.sync.since_file) {
             });
         })
         .then(() => {
-            log('All files downloaded');
             startWatcher();
         })
         .catch((error) => {
