@@ -25,6 +25,10 @@ const config_file_dir = path.dirname(config_file_path);
 
 const config_in_file = YAML.parse(fs.readFileSync(config_file_path, 'utf8'));
 const defaults = {
+    ignored: [
+        /(^|[\/\\])\../, // ignore dotfiles
+        /node_modules/
+    ],
     sync: {
         since_file: null
     }
@@ -43,7 +47,7 @@ const startWatcher = () => {
     log('Start watch', chalk.cyan("'" + watch_path + "'"), 'and sync with', chalk.cyan("'" + config.sync.base_uri + "'"));
 
     const watcher = chokidar.watch(watch_path, {
-        ignored: /(^|[\/\\])\../, // ignore dotfiles
+        ignored: config.ignored,
         persistent: true,
         ignoreInitial: true
     });
@@ -161,7 +165,7 @@ const startWatcher = () => {
 };
 
 if (config.sync.since_file) {
-    const since_file_path = watch_path + '/' + config.sync.since_file;
+    const since_file_path = config_file_dir + '/' + config.sync.since_file;
 
     if (!fs.existsSync(since_file_path)) {
         log.error('Since file not found at path', chalk.cyan("'" + since_file_path + "'"));
@@ -169,7 +173,6 @@ if (config.sync.since_file) {
     }
 
     const since__date_number = Date.parse(fs.readFileSync(since_file_path, 'utf8'));
-
     const sinceDate = new Date();
 
     if (!isNaN(since__date_number)) {
@@ -212,6 +215,16 @@ if (config.sync.since_file) {
                     message: 'Continue download these changes?'
                 });
 
+                function ensureDirectoryExistence(filePath) {
+                    var dirname = path.dirname(filePath);
+                    if (fs.existsSync(dirname)) {
+                        return true;
+                    }
+
+                    ensureDirectoryExistence(dirname);
+                    fs.mkdirSync(dirname);
+                }
+
                 prompt.run()
                     .then((download) => {
                         if (download) {
@@ -227,6 +240,7 @@ if (config.sync.since_file) {
                                     }, (error, response, body) => {
                                         if (!error) {
                                             var fs_filepath = watch_path + '/' + file.path;
+                                            ensureDirectoryExistence(fs_filepath);
 
                                             fs.writeFile(fs_filepath, body, function (error) {
                                                 if (error) {
