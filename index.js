@@ -10,7 +10,7 @@ const PromisePool = require('es6-promise-pool');
 const { Confirm } = require('enquirer');
 
 if (process.argv.length < 3) {
-    console.log('Usage: node index.js <config.yml>');
+    console.log('Usage: outofbox-skins-sync <config.yml>');
     return;
 }
 

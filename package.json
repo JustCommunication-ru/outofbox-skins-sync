@@ -6,8 +6,12 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
+    "bin": {
+        "outofbox-skins-sync": "./bin/outofbox-skins-sync.js"
+    },
+    "preferGlobal": true,
     "author": "wiistriker",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {},
     "dependencies": {
         "chalk": "^4.0.0",

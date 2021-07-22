@@ -1,6 +1,10 @@
 watch:
-    path: 'path/to/templates/files/'
+    path: '.'
 
 sync:
     base_uri: 'http://outofbox-domain.tld/_api/skins/skin-name/files/'
     token: ~
+    #ignored:
+    #    - /(^|[\/\\])\../
+    #    - /node_modules/
+    #since_file: 'sync_since.dist'
